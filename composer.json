@@ -1,0 +1,35 @@
+{
+    "name": "itseasy/util",
+    "description": "Utility Object",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wiryono Lau",
+            "email": "wiryonolau@gmail.com"
+        }
+    ],
+    "config": {
+        "platform": {
+            "php": "7.4.30",
+            "ext-intl": "1"
+        }
+    },
+    "require": {
+        "php": "^7.4",
+        "laminas/laminas-stdlib": "^3.13"
+    },
+    "autoload": {
+        "psr-4": {
+            "Itseasy\\Model\\": "src/Model"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Itseasy\\Test\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4"
+    }
+}
