@@ -125,10 +125,10 @@ abstract class AbstractModel implements ArraySerializableInterface, PluginAwareI
 
     public function isCallable($object, ?string $function): bool
     {
-        if (is_null($function)) {
+        if (!is_object($object) or is_null($function)) {
             return false;
         }
-
+        
         return (method_exists($object, $function) and is_callable([$object, $function]));
     }
 
@@ -156,7 +156,7 @@ abstract class AbstractModel implements ArraySerializableInterface, PluginAwareI
         return $this->_modelProperties;
     }
 
-    private function getPropertyClassMethod(string $type = "get", string $property, bool $throw_error = true): ?string
+    private function getPropertyClassMethod(string $type, string $property, bool $throw_error = true): ?string
     {
         $method = sprintf("%s%s", $type, implode('', array_map('ucfirst', explode('_', $property))));
         if ($this->isCallable($this, $method)) {
