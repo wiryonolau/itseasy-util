@@ -128,7 +128,7 @@ abstract class AbstractModel implements ArraySerializableInterface, PluginAwareI
         if (!is_object($object) or is_null($function)) {
             return false;
         }
-        
+
         return (method_exists($object, $function) and is_callable([$object, $function]));
     }
 
@@ -163,40 +163,5 @@ abstract class AbstractModel implements ArraySerializableInterface, PluginAwareI
             return $method;
         }
         return null;
-    }
-
-    public function __invoke(
-        array $paths,
-        &$object
-    ) {
-        $path = array_shift($paths);
-
-        $index = null;
-        if (!empty($matches[1])) {
-            $index = $matches[1];
-        }
-
-        if (is_null($index)) {
-            if (is_array($object)) {
-                $value = $object[$path];
-            } else if ($object instanceof AbstractModel or is_object($object)) {
-                $value = $object->{$path};
-            } else {
-                throw new Exception("Unrecognized Query Path");
-            }
-        } else {
-            if (is_array($object)) {
-                $value = $object[$index];
-            } else if ($object instanceof ArrayAccess) {
-                $value = $object->offsetGet($index);
-            } else {
-                throw new Exception("Unrecognized Query Path");
-            }
-        }
-
-        if (count($paths)) {
-            return new PathQueryPlugin($paths, $value);
-        }
-        return $value;
     }
 }
