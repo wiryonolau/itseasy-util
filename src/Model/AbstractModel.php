@@ -116,6 +116,64 @@ abstract class AbstractModel implements ArraySerializableInterface, PluginAwareI
         return $result;
     }
 
+
+    /**
+     * Return include / exclude attribute only
+     * Only filter by attribute name not attribute value
+     * Filter can be nested array
+     *  e.g ["id" , "data" => ["name"]]
+     * 
+     * @param array $filters return only selected public/private attribute
+     * @param bool $reverse exclude if true else include
+     * 
+     * @return array
+     */
+    public function getFilteredArrayCopy(
+        array $filters = [],
+        bool $reverse = false
+    ): array {
+        // No filters, return as is
+        if (!count($filters)) {
+            return $this->getArrayCopy();
+        }
+
+        // Flatten array, use key if nested array else value
+        $currentFilters = [];
+        foreach ($filters as $key => $value) {
+            if (is_array($value)) {
+                $currentFilters[] = $key;
+            } else {
+                $currentFilters[] = $value;
+            }
+        }
+
+        $result = [];
+        foreach ($this->getModelProperties() as $property => $scope) {
+            // Exclude any attribute from filters
+            if ($reverse and in_array($property, $currentFilters)) {
+                continue;
+            }
+
+            // Include any attribute from filters
+            if (!$reverse and !in_array($property, $currentFilters)) {
+                continue;
+            }
+
+            $method = $this->getPropertyClassMethod("get", $property);
+            if (!is_null($method)) {
+                $result[$property] = $this->{$method}();
+            } elseif ($this->isCallable($this->{$property}, "getFilteredArrayCopy")) {
+                $result[$property] = $this->{$property}->getFilteredArrayCopy(
+                    $filters[$property] ?? [],
+                    $reverse
+                );
+            } else {
+                $result[$property] = $this->{$property};
+            }
+        }
+        return $result;
+    }
+
     public function toJson(int $flags = 0, int $depth = 512): string
     {
         $flags |= JSON_THROW_ON_ERROR;

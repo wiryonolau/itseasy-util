@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Itseasy\Model;
@@ -29,7 +30,7 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
         }
     }
 
-    public function setObjectPrototype($object) : void
+    public function setObjectPrototype($object): void
     {
         if (is_string($object) and class_exists($object)) {
             $object = new $object;
@@ -51,7 +52,7 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
     }
 
 
-    public function append($item) : void
+    public function append($item): void
     {
         if (is_null($this->getObjectPrototype())) {
             parent::append($item);
@@ -67,14 +68,14 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
         }
     }
 
-    public function populate(array $data) : void
+    public function populate(array $data): void
     {
         foreach ($data as $row) {
             $this->append($row);
         }
     }
 
-    public function exchangeArray($data) : array
+    public function exchangeArray($data): array
     {
         $old = $this->getArrayCopy();
         $this->populate($data);
@@ -82,19 +83,49 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
     }
 
     // Return an array of object. Only root object is change to array.
-    public function getArray() : array
+    public function getArray(): array
     {
         return $this->getIterator()->getArrayCopy();
     }
 
-    // Return all root and nested object as an array
-    public function getArrayCopy() : array
+    /**
+     * Return all root and nested object as an array
+     */
+    public function getArrayCopy(): array
     {
         $result = [];
         foreach ($this as $data) {
             if ($data instanceof ArraySerializableInterface) {
                 $result[] = $data->getArrayCopy();
-            } elseif (method_exists($data, "getArrayCopy") and is_callable([$data, "getArrayCopy"])) {
+            } elseif (
+                method_exists($data, "getArrayCopy")
+                and is_callable([$data, "getArrayCopy"])
+            ) {
+                $result[] = $data->getArrayCopy();
+            } else {
+                $result[] = $data;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Return filtered attribute 
+     * If object does not implement getFilteredArrayCopy it will pass as normal array
+     * Check AbstractModel getFilteredArrayCopy document
+     */
+    public function getFilteredArrayCopy(
+        array $filters = [],
+        bool $reverse = false
+    ): array {
+        $result = [];
+        foreach ($this as $data) {
+            if (
+                method_exists($data, "getFilteredArrayCopy")
+                and is_callable([$data, "getFilteredArrayCopy"])
+            ) {
+                $result[] = $data->getFilteredArrayCopy($filters, $reverse);
+            } else if ($data instanceof ArraySerializableInterface) {
                 $result[] = $data->getArrayCopy();
             } else {
                 $result[] = $data;
@@ -104,12 +135,12 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
     }
 
     // Shortcut, 1 level only
-    public function getArrayColumn($column_key, $index_key = null) : array
+    public function getArrayColumn($column_key, $index_key = null): array
     {
         return array_column($this->getArray(), $column_key, $index_key);
     }
 
-    public function toJson(int $flags = 0, int $depth = 512) : string
+    public function toJson(int $flags = 0, int $depth = 512): string
     {
         $flags |= JSON_THROW_ON_ERROR;
 

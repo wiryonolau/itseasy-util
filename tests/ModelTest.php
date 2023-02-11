@@ -66,13 +66,18 @@ final class ModelTest extends TestCase
     {
         $complex = new Model\TestComplexModel();
 
-        $data = new Model\TestModel();
-        $data->populate([
+        $data = [
             "id" => 1,
-            "name" => "test"
-        ]);
+            "name" => "test",
+            "data" => [
+                [
+                    "id" => 123,
+                    "name" => "test"
+                ]
+            ]
+        ];
 
-        $complex->addData($data);
+        $complex->populate($data);
 
         $this->assertEquals($complex->data->count(), 1);
         $this->assertEquals($complex->query("data.[0].name"), "test");
