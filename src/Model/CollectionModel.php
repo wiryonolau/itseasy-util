@@ -8,6 +8,7 @@ use ArrayIterator;
 use ArrayObject;
 use Exception;
 use Laminas\Stdlib\ArraySerializableInterface;
+use Traversable;
 
 class CollectionModel extends ArrayObject implements ArraySerializableInterface
 {
@@ -68,7 +69,7 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
         }
     }
 
-    public function populate(array $data): void
+    public function populate(Traversable $data): void
     {
         foreach ($data as $row) {
             $this->append($row);
