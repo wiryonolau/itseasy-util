@@ -69,8 +69,12 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
         }
     }
 
-    public function populate(Traversable $data): void
+    public function populate($data): void
     {
+        if (!(is_array($data) or $data instanceof Traversable)) {
+            throw new Exception("value must be an array or implement Traversable");
+        }
+
         foreach ($data as $row) {
             $this->append($row);
         }

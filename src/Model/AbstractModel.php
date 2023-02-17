@@ -83,6 +83,8 @@ abstract class AbstractModel implements ArraySerializableInterface, PluginAwareI
             $method = $this->getPropertyClassMethod("set", $k);
             if (!is_null($method)) {
                 $this->{$method}($v);
+            } elseif ($this->{$k} === $v) {
+                $this->{$k} = $v;
             } elseif ($this->isCallable($this->{$k}, "populate")) {
                 $this->{$k}->populate($v);
             } elseif ($this->{$k} instanceof ArraySerializableInterface) {
