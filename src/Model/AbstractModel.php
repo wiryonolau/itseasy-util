@@ -102,6 +102,12 @@ abstract class AbstractModel implements ArraySerializableInterface, PluginAwareI
         return $old;
     }
 
+    /**
+     * Convert model public / protected attributes to array recursively 
+     * will also apply each attribute filter if exist
+     *
+     * function cannot have arguments since it require to compatible with PHP ArrayObject / ArrayIterator
+     */
     public function getArrayCopy(): array
     {
         $result = [];
@@ -116,6 +122,17 @@ abstract class AbstractModel implements ArraySerializableInterface, PluginAwareI
             }
         }
         return $result;
+    }
+
+    /**
+     * Convert model public / protected attributes to array that compatible with database column
+     * Some column might be require to be encode as json, datetime to string etc
+     * 
+     * Override this function, by default call getArrayCopy
+     */
+    public function getArrayForDb(): array
+    {
+        return $this->getArrayCopy();
     }
 
 
