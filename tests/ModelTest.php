@@ -4,6 +4,7 @@ namespace Itseasy\Test;
 
 use PHPUnit\Framework\TestCase;
 use DateTimeInterface;
+use Itseasy\Stdlib\ArrayUtils;
 
 final class ModelTest extends TestCase
 {
@@ -79,8 +80,16 @@ final class ModelTest extends TestCase
 
         $complex->populate($data);
 
+        $s = serialize($complex);
+        // debug($s);
+        // debug(unserialize($s));
+        // debug($complex->getArrayForDb());
+
         $this->assertEquals($complex->data->count(), 1);
         $this->assertEquals($complex->query("data.[0].name"), "test");
+        $this->assertEquals(ArrayUtils::query($complex, "data.[0].name"), "test");
+        $this->assertEquals(ArrayUtils::query($complex, "data.[0].name.yoyo", "placeholder"), "placeholder");
+        $this->assertEquals(ArrayUtils::query($complex, "data.[0].name.yoyo"), null);
         $this->assertEquals($complex->getTechCreationDate(true) instanceof DateTimeInterface, true);
         $this->assertEquals($complex->getTechModificationDate(true) instanceof DateTimeInterface, true);
     }

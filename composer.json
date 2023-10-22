@@ -21,7 +21,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Itseasy\\Model\\": "src/Model"
+            "Itseasy\\Model\\": "src/Model",
+            "Itseasy\\Stdlib\\": "src/Stdlib"
         }
     },
     "autoload-dev": {
