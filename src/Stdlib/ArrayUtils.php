@@ -61,7 +61,7 @@ class ArrayUtils
         }
 
         if (is_null($index)) {
-            if (is_array($object)) {
+            if (is_array($object) and isset($object[$path])) {
                 $value = $object[$path];
             } else if ($object instanceof AbstractModel or is_object($object)) {
                 $value = $object->{$path};
@@ -71,7 +71,7 @@ class ArrayUtils
                 return $placeholder;
             }
         } else {
-            if (is_array($object)) {
+            if (is_array($object) and isset($object[$index])) {
                 $value = $object[$index];
             } else if ($object instanceof ArrayAccess) {
                 $value = $object->offsetGet($index);
