@@ -16,7 +16,7 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
 
     public function __construct(
         $objectPrototype = null,
-        array $data = [],
+        $data = [],
         int $flags = 0,
         string $iteratorClass = ArrayIterator::class
     ) {
@@ -26,9 +26,7 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
             $this->setObjectPrototype($objectPrototype);
         }
 
-        foreach ($data as $d) {
-            $this->append($d);
-        }
+        $this->populate($data);
     }
 
     public function setObjectPrototype($object): void
