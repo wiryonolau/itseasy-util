@@ -81,8 +81,14 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
     public function exchangeArray($data): array
     {
         $old = $this->getArrayCopy();
+        $this->clear();
         $this->populate($data);
         return $old;
+    }
+
+    public function clear(): void
+    {
+        parent::exchangeArray([]);
     }
 
     // Return an array of object. Only root object is change to array.
