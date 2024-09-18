@@ -5,6 +5,7 @@ namespace Itseasy\Test;
 use PHPUnit\Framework\TestCase;
 use DateTimeInterface;
 use Itseasy\Stdlib\ArrayUtils;
+use Itseasy\Model\ParameterSetModel;
 
 final class ModelTest extends TestCase
 {
@@ -61,6 +62,17 @@ final class ModelTest extends TestCase
         }
 
         $this->assertEquals(count($collection->getArrayColumn("id")), $count);
+    }
+
+    public function testParameterCollectionModel()
+    {
+        $parameterCollection = new ParameterSetModel();
+        $parameterCollection->setParameter("test", "testvalue");
+        $parameterCollection->append(["new key", "New Value"]);
+        $parameterCollection->append(["key" => "MyKey", "value" => "MyValue"]);
+
+        $this->assertEquals($parameterCollection->hasParameter("MyKey"), true);
+        $this->assertEquals($parameterCollection->count(), 3);
     }
 
     public function testComplexModel()

@@ -17,7 +17,7 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
     public function __construct(
         $objectPrototype = null,
         $data = [],
-        int $flags = 0,
+        int $flags = ArrayObject::STD_PROP_LIST,
         string $iteratorClass = ArrayIterator::class
     ) {
         parent::__construct([], $flags, $iteratorClass);
@@ -69,7 +69,15 @@ class CollectionModel extends ArrayObject implements ArraySerializableInterface
 
     public function populate($data): void
     {
-        if (!(is_array($data) or $data instanceof Traversable)) {
+        if (is_string($data)) {
+            $data = json_decode($data, true);
+
+            if ($data === false or is_null($data)) {
+                throw new ValueError("value must be an array or implement Traversable");
+            }
+        }
+
+        if (!(is_array($data) or !($data instanceof Traversable))) {
             throw new Exception("value must be an array or implement Traversable");
         }
 
