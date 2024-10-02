@@ -73,8 +73,12 @@ abstract class AbstractModel implements ArraySerializableInterface, PluginAwareI
         return $this->toJson();
     }
 
-    public function populate(array $data): void
+    public function populate(?array $data = []): void
     {
+        if (is_null($data)) {
+            return;
+        }
+
         foreach ($data as $k => $v) {
             if (empty($this->getModelProperties()[$k])) {
                 continue;

@@ -62,6 +62,10 @@ class ParameterSetModel extends ArrayObject
 
     public function populate($data): void
     {
+        if (is_null($data)) {
+            return;
+        }
+
         if (is_string($data)) {
             $data = json_decode($data, true);
 
