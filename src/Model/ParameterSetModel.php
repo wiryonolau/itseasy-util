@@ -6,6 +6,7 @@ namespace Itseasy\Model;
 
 use ArrayIterator;
 use ArrayObject;
+use Laminas\Stdlib\ArrayUtils;
 use ValueError;
 
 class ParameterSetModel extends ArrayObject
@@ -78,8 +79,14 @@ class ParameterSetModel extends ArrayObject
             throw new ValueError("value must be an array or implement Traversable");
         }
 
-        foreach ($data as $row) {
-            $this->append($row);
+        if (ArrayUtils::hasStringKeys($data)) {
+            foreach ($data as $index => $row) {
+                $this->setParameter($index, $row);
+            }
+        } else {
+            foreach ($data as $row) {
+                $this->append($row);
+            }
         }
     }
 
