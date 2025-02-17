@@ -11,12 +11,12 @@
     ],
     "config": {
         "platform": {
-            "php": "7.4.30",
+            "php": "8.3.16",
             "ext-intl": "1"
         }
     },
     "require": {
-        "php": "^7.4 || ^8.0 || ^8.1",
+        "php": "^7.4 || ^8",
         "laminas/laminas-stdlib": "^3.13"
     },
     "autoload": {

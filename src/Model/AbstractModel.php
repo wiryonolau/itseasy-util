@@ -93,7 +93,7 @@ abstract class AbstractModel implements ArraySerializableInterface, PluginAwareI
                 $this->{$k}->populate($v);
             } elseif ($this->{$k} instanceof ArraySerializableInterface) {
                 $this->{$k}->exchangeArray($v);
-            } else {
+            } elseif (property_exists($this, $k)) {
                 $this->{$k} = $v;
             }
         }
